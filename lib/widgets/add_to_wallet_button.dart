@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ class AddToWalletButton extends StatefulWidget {
   final double width;
   final double height;
   final Widget? unsupportedPlatformChild;
+  final void Function()? onPressed;
   final FutureOr<Map<String, String>?> Function(
     List<Object?>,
     Uint8List,
@@ -24,6 +24,7 @@ class AddToWalletButton extends StatefulWidget {
     Key? key,
     required this.width,
     required this.height,
+    this.onPressed,
     this.loadCard,
     this.unsupportedPlatformChild,
   }) : super(key: key);
@@ -79,6 +80,11 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
           layoutDirection: Directionality.of(context),
           creationParams: uiKitCreationParams,
           creationParamsCodec: const StandardMessageCodec(),
+        );
+      case TargetPlatform.android:
+        return RawMaterialButton(
+          child: Text('test'),
+          onPressed: widget.onPressed,
         );
       default:
         if (widget.unsupportedPlatformChild == null) {

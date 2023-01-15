@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:wallet_card/wallet_card_plugin_response.dart';
 
 export 'widgets/add_to_wallet_button.dart';
 
@@ -37,5 +38,11 @@ class WalletCard {
 
   void removeHandler(String key) {
     _handlers.remove(key);
+  }
+
+  Future<WalletCardPluginResponse> saveAndroidPass(String pass) async {
+    final method = await _channel.invokeMethod('savePass', pass);
+    final response = WalletCardPluginResponse.fromMap(method);
+    return response;
   }
 }
