@@ -52,15 +52,22 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
     WalletCard().addHandler(widget._id, (call) {
       switch (call.method) {
         case "add_payment_pass":
-          return widget.loadCard?.call(
-            call.arguments["certificates"] as List,
-            call.arguments["nonce"] as Uint8List,
-            call.arguments["nonceSignature"] as Uint8List,
-          );
+          return getPass(call);
+
         default:
           return null;
       }
     });
+  }
+
+  Future<Map<String, String>?> getPass(MethodCall call) async {
+    var result = await widget.loadCard?.call(
+      call.arguments["certificates"] as List,
+      call.arguments["nonce"] as Uint8List,
+      call.arguments["nonceSignature"] as Uint8List,
+    );
+
+    return result;
   }
 
   @override
