@@ -148,7 +148,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _ controller: PKAddPaymentPassViewController,
         didFinishAdding pass: PKPaymentPass?,
         error: Error?) {
-        
-        // This method will be called when enroll process ends (with success / error)
+        print(error)
+        print(pass)
     }
 }
