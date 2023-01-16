@@ -57,7 +57,6 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
     private var _key: String
     private var _cardHolderName: String
     private var _cardSuffix: String
-    private var _key: String
     private var _channel: FlutterMethodChannel
 
     init(
