@@ -11,6 +11,8 @@ class AddToWalletButton extends StatefulWidget {
 
   final double width;
   final double height;
+  final String? cardHolderName;
+  final String? cardSuffix;
   final Widget? unsupportedPlatformChild;
   final void Function()? onPressed;
   final FutureOr<Map<String, String>?> Function(
@@ -24,6 +26,8 @@ class AddToWalletButton extends StatefulWidget {
     Key? key,
     required this.width,
     required this.height,
+    required this.cardHolderName,
+    required this.cardSuffix,
     this.onPressed,
     this.loadCard,
     this.unsupportedPlatformChild,
@@ -38,6 +42,8 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
         'width': widget.width,
         'height': widget.height,
         'key': widget._id,
+        'cardHolderName': widget.cardHolderName ?? '',
+        'cardSuffix': widget.cardSuffix ?? '',
       };
 
   @override

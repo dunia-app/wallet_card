@@ -55,6 +55,9 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
     private var _width: CGFloat
     private var _height: CGFloat
     private var _key: String
+    private var _cardHolderName: String
+    private var _cardSuffix: String
+    private var _key: String
     private var _channel: FlutterMethodChannel
 
     init(
@@ -68,6 +71,8 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _width = args["width"] as? CGFloat ?? 140
         _height = args["height"] as? CGFloat ?? 30
         _key = args["key"] as! String
+        _cardHolderName = args["cardHolderName"] as! String
+        _cardSuffix = args["cardSuffix"] as! String
         _channel = channel
         super.init()
         createAddPassButton()
@@ -91,8 +96,8 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
             return
         }
 
-        configuration.cardholderName = "Matthieu Lagast"
-        configuration.primaryAccountSuffix = "1234"
+        configuration.cardholderName = _cardHolderName
+        configuration.primaryAccountSuffix = _cardSuffix
 
         guard let addPassViewController = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self) else {
             print("View controller messed up")
