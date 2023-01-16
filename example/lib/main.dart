@@ -35,10 +35,9 @@ class _MyAppState extends State<MyApp> {
           child: AddToWalletButton(
             width: 150,
             height: 30,
-            //unsupportedPlatformChild: DownloadPass(pkPass: _pkPassData),
+            cardHolderName: "Holder Name",
+            cardSuffix: "1234",
             loadCard: (certificates, nonce, nonceSignature) {
-              print("loadCard");
-              print(certificates);
               return {
                 "encryptedPassData": "test",
                 "activationData": "test",
