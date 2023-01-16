@@ -117,6 +117,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void) {
       
         _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certificates, "nonce": nonce, "nonceSignature": nonceSignature], result: {(r:Any?) -> () in
+          print(r)
           print(r as? Dictionary<String, String?>)
           guard let params = r as? Dictionary<String, String?> else {
             print("Error addPaymentPassViewController"); return
