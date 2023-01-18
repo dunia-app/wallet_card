@@ -139,6 +139,9 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
           request.ephemeralPublicKey = ephemeralPublicKey
 
           print(request)
+          print(request.activationData)
+          print(request.encryptedPassData)
+          print(request.ephemeralPublicKey)
 
           handler(request)
         })
