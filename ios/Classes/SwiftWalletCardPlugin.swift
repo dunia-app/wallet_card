@@ -129,19 +129,19 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
               print("Error addPaymentPassViewController"); return
           }
           
-          let encryptedPassData = Data(data.utf8)
-          let ephemeralPublicKey = Data(key.utf8)
+          let encryptedPassData = Data(base64Encoded: data)
+          let ephemeralPublicKey = Data(base64Encoded: key)
           let activationData = Data(otp.utf8)
 
           let request = PKAddPaymentPassRequest()
           request.activationData = activationData
-          //request.encryptedPassData = encryptedPassData
-          //request.ephemeralPublicKey = ephemeralPublicKey
+          request.encryptedPassData = encryptedPassData
+          request.ephemeralPublicKey = ephemeralPublicKey
 
           print(request)
           print(String(decoding: request.activationData!, as: UTF8.self))
-          //print(String(decoding: request.encryptedPassData!, as: UTF8.self))
-          //print(String(decoding: request.ephemeralPublicKey!, as: UTF8.self))
+          print(String(decoding: request.encryptedPassData!, as: UTF8.self))
+          print(String(decoding: request.ephemeralPublicKey!, as: UTF8.self))
 
           handler(request)
         })
