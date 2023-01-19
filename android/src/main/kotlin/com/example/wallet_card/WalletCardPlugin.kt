@@ -54,7 +54,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     channel.setMethodCallHandler(null)
   }
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
     if (!operations.containsKey(call.method)) {
       operations[call.method] = WalletCardPluginResponseWrapper(call.method, result)
     }
@@ -103,7 +103,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 }
 
-class WalletCardPluginResponseWrapper(@NonNull var methodName: String, @NonNull var methodResult: Result) {
+class WalletCardPluginResponseWrapper(@NonNull var methodName: String, @NonNull var methodResult: MethodChannel.Result) {
     lateinit var response: WalletCardPluginResponse
     fun flutterResult() {
         methodResult.success(response.toMap())
