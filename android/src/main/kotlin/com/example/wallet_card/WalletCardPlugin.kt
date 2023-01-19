@@ -1,26 +1,21 @@
 package com.example.wallet_card
 
 import android.app.Activity
-import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.os.Bundle
-import android.util.Log
 import androidx.annotation.NonNull
-import androidx.annotation.Nullable
-
 import com.google.android.gms.pay.Pay
-import com.google.android.gms.pay.PayApiAvailabilityStatus
 import com.google.android.gms.pay.PayClient
-import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.*
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import com.google.android.gms.tapandpay.TapAndPay
+import com.google.android.gms.tapandpay.TapAndPayClient
+import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest
+import com.google.android.gms.tapandpay.issuer.UserAddress
+
 
 /** WalletCardPlugin */
 class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -71,16 +66,33 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     currentOperation = walletCardPluginResponseWrapper
 
     when (call.method) {
-      "savePass" -> savePass(call.arguments as String).flutterResult()
+      "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
       else -> result.notImplemented()
     }
   }
 
-  private fun savePass(@NonNull pass: String): WalletCardPluginResponseWrapper {
+  private fun savePass(holderName: String?, suffix: String?, pass: String?): WalletCardPluginResponseWrapper {
     val currentOp = operations["savePass"]!!
     try {
+      val opcBytes: kotlin.ByteArray = pass!!.toByteArray()
+      val pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
+        .setOpaquePaymentCard(opcBytes)
+        .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
+        .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
+        .setDisplayName(holderName!!)
+        .setLastDigits(suffix!!)
+        .build()
+
+      val tapAndPayClient = TapAndPay.getClient(activity);
+      tapAndPayClient.pushTokenize(
+        activity,  // here i'm passing my current activity.
+        pushTokenizeRequest,
+        1
+      )
+      /*
       val walletClient: PayClient = Pay.getClient(activity.application)
       walletClient.savePasses(pass, activity, 0)
+       */
       currentOp.response.message = mutableMapOf("initialized" to true)
       currentOp.response.status = true
     } catch (e: Exception) {
