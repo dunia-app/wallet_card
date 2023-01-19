@@ -83,7 +83,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         .setLastDigits(suffix!!)
         .build()
 
-      val tapAndPayClient = TapAndPay.getClient(activity);
+      val tapAndPayClient = TapAndPay.getClient(activity.applicationContext);
       tapAndPayClient.pushTokenize(
         activity,  // here i'm passing my current activity.
         pushTokenizeRequest,
