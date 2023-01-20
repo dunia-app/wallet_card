@@ -133,7 +133,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
           
           let encryptedPassData = Data(base64Encoded: data)
           let ephemeralPublicKey = Data(base64Encoded: key)
-          let activationData = Data(base64Encoded: otp)
+          let activationData = Data(otp.utf8)
 
           let request = PKAddPaymentPassRequest()
           request.activationData = activationData
