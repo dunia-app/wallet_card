@@ -1,5 +1,6 @@
 package com.example.wallet_card
 
+import android.util.Log
 import android.app.Activity
 import androidx.annotation.NonNull
 import com.google.android.gms.pay.Pay
@@ -65,6 +66,12 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     currentOperation = walletCardPluginResponseWrapper
 
+    Log.d("TAG", "methodCall")
+    Log.d("TAG", call.method)
+    Log.d("TAG", call.arguments.toString())
+    val suffix = call.argument("suffix") as String?
+    Log.d("TAG", suffix!!)
+
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
       else -> result.notImplemented()
@@ -74,6 +81,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private fun savePass(holderName: String?, suffix: String?, pass: String?): WalletCardPluginResponseWrapper {
     val currentOp = operations["savePass"]!!
     try {
+      Log.d("TAG", "savePass")
       val opcBytes: kotlin.ByteArray = pass!!.toByteArray()
       val pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
         .setOpaquePaymentCard(opcBytes)

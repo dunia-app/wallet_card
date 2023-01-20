@@ -97,6 +97,8 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
 
         configuration.cardholderName = _cardHolderName
         configuration.primaryAccountSuffix = _cardSuffix
+        configuration.paymentNetwork = PKPaymentNetwork.masterCard
+        configuration.primaryAccountIdentifier = "K8MCNDL5JY"
 
         guard let addPassViewController = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self) else {
             print("View controller messed up")
@@ -131,7 +133,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
           
           let encryptedPassData = Data(base64Encoded: data)
           let ephemeralPublicKey = Data(base64Encoded: key)
-          let activationData = Data(otp.utf8)
+          let activationData = Data(base64Encoded: otp)
 
           let request = PKAddPaymentPassRequest()
           request.activationData = activationData

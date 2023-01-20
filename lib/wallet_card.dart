@@ -41,7 +41,7 @@ class WalletCard {
   }
 
   Future<WalletCardPluginResponse> saveAndroidPass(String holderName, String suffix, String pass) async {
-    final method = await _channel.invokeMethod('savePass', <String, dynamic>{
+    final method = await _channel.invokeMethod('savePass', <String, String>{
       'holderName': holderName,
       'suffix': suffix,
       'pass': pass,
