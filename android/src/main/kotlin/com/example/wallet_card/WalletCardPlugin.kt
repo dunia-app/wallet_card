@@ -1,10 +1,13 @@
 package com.example.wallet_card
 
-import android.util.Log
 import android.app.Activity
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.annotation.NonNull
-import com.google.android.gms.pay.Pay
-import com.google.android.gms.pay.PayClient
+import com.google.android.gms.tapandpay.TapAndPay
+import com.google.android.gms.tapandpay.TapAndPayClient
+import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest
+import com.google.android.gms.tapandpay.issuer.UserAddress
 import com.google.android.gms.wallet.*
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -12,10 +15,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import com.google.android.gms.tapandpay.TapAndPay
-import com.google.android.gms.tapandpay.TapAndPayClient
-import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest
-import com.google.android.gms.tapandpay.issuer.UserAddress
 
 
 /** WalletCardPlugin */
@@ -29,6 +28,9 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   /// when the Flutter Engine is detached from the Activity
   private lateinit var activity: Activity
   private lateinit var channel : MethodChannel
+  private lateinit var tapAndPayClient: TapAndPayClient
+
+  private val REQUEST_CODE_PUSH_TOKENIZE: kotlin.Int = 3
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "wallet_card")
@@ -37,6 +39,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     activity = binding.activity
+    tapAndPayClient = TapAndPay.getClient(activity)
   }
 
   override fun onDetachedFromActivity() {
@@ -81,8 +84,41 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private fun savePass(holderName: String?, suffix: String?, pass: String?): WalletCardPluginResponseWrapper {
     val currentOp = operations["savePass"]!!
     try {
-      Log.d("TAG", "savePass")
-      val opcBytes: kotlin.ByteArray = pass!!.toByteArray()
+      activity.runOnUiThread(Runnable {
+        try {
+          val opcBytes: kotlin.ByteArray = pass!!.toByteArray()
+          var userAddress: UserAddress = UserAddress.newBuilder()
+            .setName("getString(R.string.user_address_dummy_name)")
+            .setAddress1("getString(R.string.user_address_dummy_address1)")
+            .setLocality("getString(R.string.user_address_dummy_locality)")
+            .setAdministrativeArea("getString(R.string.user_address_dummy_administrative_area)")
+            .setCountryCode("getString(R.string.user_address_dummy_country_code)")
+            .setPostalCode("")
+            .setPhoneNumber("getString(R.string.user_address_dummy_phone_number)")
+            .build()
+
+          var pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
+            .setOpaquePaymentCard(opcBytes)
+            .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
+            .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
+            .setDisplayName("getString(R.string.push_tokenize_request_dummy_display_name)")
+            .setLastDigits("getString(R.string.push_tokenize_request_dummy_last_digits)")
+            .setUserAddress(userAddress)
+            .build()
+
+          Log.i("TAG", "before push");
+          tapAndPayClient.pushTokenize(
+            activity,
+            pushTokenizeRequest,
+            REQUEST_CODE_PUSH_TOKENIZE
+          )
+          Log.i("TAG", "after push");
+        } catch (e: Exception) {
+          Log.i("TAG", e.message!!);
+        }
+      })
+
+      /*
       val pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
         .setOpaquePaymentCard(opcBytes)
         .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
@@ -91,12 +127,15 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         .setLastDigits(suffix!!)
         .build()
 
-      val tapAndPayClient = TapAndPay.getClient(activity.applicationContext);
+      Log.d("TAG", "savePass tap")
+      Log.d("TAG", activity.toString())
+
       tapAndPayClient.pushTokenize(
         activity,  // here i'm passing my current activity.
         pushTokenizeRequest,
-        1
+        0
       )
+       */
       /*
       val walletClient: PayClient = Pay.getClient(activity.application)
       walletClient.savePasses(pass, activity, 0)
