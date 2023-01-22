@@ -117,8 +117,13 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         generateRequestWithCertificateChain certificates: [Data],
         nonce: Data, nonceSignature: Data,
         completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void) {
+
+        var certifs: [String] = []
+        for certificate in certificates {
+            certifs.append(certificate.base64EncodedString())
+        }
       
-        _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certificates, "nonce": nonce, "nonceSignature": nonceSignature], result: { r in
+        _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certifs, "nonce": nonce.base64EncodedString(), "nonceSignature": nonceSignature.base64EncodedString()], result: { r in
           print(r)
           print(r as? Dictionary<String, String?>)
           guard let params = r as? Dictionary<String, String?> else {
@@ -133,7 +138,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
           
           let encryptedPassData = Data(base64Encoded: data)
           let ephemeralPublicKey = Data(base64Encoded: key)
-          let activationData = Data(otp.utf8)
+          let activationData = otp.data(using: .utf8)
 
           let request = PKAddPaymentPassRequest()
           request.activationData = activationData
