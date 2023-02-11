@@ -16,7 +16,7 @@ allprojects {
         google()
         mavenCentral()
         maven {
-            url("file:/Users/mlagast/Downloads/") // Path to the TapAndPay m2repo folder
+            url("file:../m2repo/") // Path to the TapAndPay m2repo folder
         }
     }
 }
