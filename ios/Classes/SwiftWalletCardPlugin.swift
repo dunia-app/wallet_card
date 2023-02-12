@@ -82,33 +82,29 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
     }
 
     func createAddPassButton() {
-        let passButton = PKAddPassButton(addPassButtonStyle: PKAddPassButtonStyle.black)
-        passButton.frame = CGRect(x: 0, y: 0, width: _width, height: _height)
+        let passButton = PKAddPassButton(addPassButtonStyle: .blackOutline)
         passButton.addTarget(self, action: #selector(passButtonAction), for: .touchUpInside)
         _view.addSubview(passButton)
+        passButton.translatesAutoresizingMaskIntoConstraints = false
+        passButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        passButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32).isActive = true
+        passButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32).isActive = true
     }
 
     @objc func passButtonAction() {
         guard let configuration = PKAddPaymentPassRequestConfiguration(encryptionScheme: .ECC_V2) else {
-            print("InApp enrollment configuraton fails")
-            //showPassKitUnavailable(message: "InApp enrollment configuraton fails")
-            return
+          return
         }
 
         configuration.cardholderName = _cardHolderName
         configuration.primaryAccountSuffix = _cardSuffix
         configuration.paymentNetwork = PKPaymentNetwork.masterCard
-        configuration.primaryAccountIdentifier = "K8MCNDL5JY"
 
-        guard let addPassViewController = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self) else {
-            print("View controller messed up")
+        guard let addPassViewController = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self),
+              let rootVC = UIApplication.shared.keyWindow?.rootViewController else {
             return
         }
-
-        guard let rootVC = UIApplication.shared.keyWindow?.rootViewController else {
-            print("Root VC unavailable")
-            return
-        }
+        
         rootVC.present(addPassViewController, animated: true)
     }
 
@@ -124,8 +120,6 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         }
       
         _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certifs, "nonce": nonce.base64EncodedString(), "nonceSignature": nonceSignature.base64EncodedString()], result: { r in
-          print(r)
-          print(r as? Dictionary<String, String?>)
           guard let params = r as? Dictionary<String, String?> else {
             print("Error addPaymentPassViewController"); return
           }
