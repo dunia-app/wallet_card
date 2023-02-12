@@ -77,10 +77,6 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         createAddPassButton()
     }
 
-    func view() -> UIView {
-        _view
-    }
-
     func createAddPassButton() {
         let passButton = PKAddPassButton(addPassButtonStyle: .blackOutline)
         passButton.addTarget(self, action: #selector(passButtonAction), for: .touchUpInside)
@@ -122,7 +118,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certifs, "nonce": nonce.base64EncodedString(), "nonceSignature": nonceSignature.base64EncodedString()], result: { r in
           let decoder = JSONDecoder()
           guard let result = r as? String,
-                let otpData = try? JSONSerialization.data(withJSONObject: ["issuerInitiatedDigitizationData": encodedData]),
+                let otpData = try? JSONSerialization.data(withJSONObject: ["issuerInitiatedDigitizationData": result]),
                 let decoded = try? decoder.decode(DigitizationData.self, from: otpData) else {
             return
           }
