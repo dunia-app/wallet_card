@@ -15,7 +15,7 @@ class AddToWalletButton extends StatefulWidget {
   final String? cardSuffix;
   final Widget? unsupportedPlatformChild;
   final void Function()? onPressed;
-  final FutureOr<Map<String, String>?> Function(
+  final FutureOr<String?> Function(
     List<Object?>,
     String,
     String,
@@ -60,9 +60,7 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
     });
   }
 
-  Future<Map<String, String>?> getPass(MethodCall call) async {
-    print(call.arguments["certificates"] as List<Object?>);
-    print(call.arguments["nonce"] as String);
+  Future<String?> getPass(MethodCall call) async {
     var result = await widget.loadCard?.call(
       call.arguments["certificates"] as List<Object?>,
       call.arguments["nonce"] as String,

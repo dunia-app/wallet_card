@@ -104,7 +104,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
               let rootVC = UIApplication.shared.keyWindow?.rootViewController else {
             return
         }
-        
+
         rootVC.present(addPassViewController, animated: true)
     }
 
@@ -120,28 +120,17 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         }
       
         _channel.invokeMethod("add_payment_pass", arguments: ["key": _key, "certificates": certifs, "nonce": nonce.base64EncodedString(), "nonceSignature": nonceSignature.base64EncodedString()], result: { r in
-          guard let params = r as? Dictionary<String, String?> else {
-            print("Error addPaymentPassViewController"); return
+          let decoder = JSONDecoder()
+          guard let result = r as? String,
+                let otpData = try? JSONSerialization.data(withJSONObject: ["issuerInitiatedDigitizationData": encodedData]),
+                let decoded = try? decoder.decode(DigitizationData.self, from: otpData) else {
+            return
           }
-            
-          guard let data = params["encryptedPassData"] as? String,
-            let key = params["ephemeralPublicKey"] as? String,
-            let otp = params["activationData"] as? String else {
-              print("Error addPaymentPassViewController"); return
-          }
-          
-          let encryptedPassData = Data(base64Encoded: data)
-          let ephemeralPublicKey = Data(base64Encoded: key)
-          let activationData = otp.data(using: .utf8)
 
           let request = PKAddPaymentPassRequest()
-          request.activationData = activationData
-          request.encryptedPassData = encryptedPassData
-          request.ephemeralPublicKey = ephemeralPublicKey
-
-          print(String(decoding: request.activationData!, as: UTF8.self))
-          print(request.encryptedPassData!)
-          print(request.ephemeralPublicKey!)
+          request.activationData = response.activationData
+          request.ephemeralPublicKey = response.ephemeralPublicKey
+          request.encryptedPassData = response.encryptedPassData
 
           handler(request)
         })
@@ -154,4 +143,78 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         print(error)
         print(pass)
     }
+}
+
+public struct DigitizationData {
+    public let activationData: Data
+    public let encryptedPassData: Data
+    public let ephemeralPublicKey: Data
+}
+
+extension DigitizationData: Codable {
+    private enum CodingKeys: String, CodingKey {
+        case content = "issuerInitiatedDigitizationData"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let content = try container.decode(Data.self, forKey: .content)
+        
+        guard let dictionary = try JSONSerialization.jsonObject(with: content) as? [String: String] else {
+            throw DecodingError.typeMismatch(
+                [String: String].self,
+                DecodingError.Context(
+                    codingPath: [CodingKeys.content],
+                    debugDescription: "Unable to serialise `issuerInitiatedDigitizationData` as `[String: String]`."
+                )
+            )
+        }
+
+        guard let activationData = dictionary["activationData"],
+            let encryptedPassData = dictionary["encryptedPassData"],
+            let ephemeralPublicKey = dictionary["ephemeralPublicKey"] else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .content,
+                    in: container,
+                    debugDescription: "`issuerInitiatedDigitizationData` has a missing key (\"activationData\", \"encryptedPassData\" or \"ephemeralPublicKey\")."
+                )
+            }
+
+        guard let data = Data(base64Encoded: activationData),
+              let activationDataDictionary = try JSONSerialization.jsonObject(with: data) as? [String: String] else {
+                throw DecodingError.typeMismatch(
+                    [String: String].self,
+                    DecodingError.Context(
+                    codingPath: [CodingKeys.content],
+                    debugDescription: "Unable to serialise `activationData` as `[String: String]`."
+                    )
+                )
+        }
+
+        guard let activationData = activationDataDictionary["tokenizationAuthenticationValue"] else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .content,
+                in: container,
+                debugDescription: "The key \"tokenizationAuthenticationValue\" is missing from the `activationData` dictionary."
+            )
+        }
+
+        guard let activationData = Data(base64Encoded: activationData),
+            let encryptedPassData = Data(base64Encoded: encryptedPassData),
+            let ephemeralPublicKey = Data(base64Encoded: ephemeralPublicKey) else {
+            throw DecodingError.dataCorruptedError(
+            forKey: .content,
+            in: container,
+            debugDescription: "Unable to convert a base64 string to Data."
+            )
+        }
+
+        self.activationData = activationData
+        self.encryptedPassData = encryptedPassData
+        self.ephemeralPublicKey = ephemeralPublicKey
+    }
+
+    public func encode(to _: Encoder) throws { // swiftlint:disable:this unavailable_function
+        fatalError("encode(to:) has not been implemented")
+        }
 }
