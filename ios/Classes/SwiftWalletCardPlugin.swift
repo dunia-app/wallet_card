@@ -77,6 +77,10 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         createAddPassButton()
     }
 
+    func view() -> UIView {
+        _view
+    }
+
     func createAddPassButton() {
         let passButton = PKAddPassButton(addPassButtonStyle: .blackOutline)
         passButton.addTarget(self, action: #selector(passButtonAction), for: .touchUpInside)
