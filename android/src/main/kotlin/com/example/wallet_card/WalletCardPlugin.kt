@@ -96,8 +96,8 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             .setOpaquePaymentCard(opcBytes)
             .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
             .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
-            .setDisplayName(holderName != null ? holderName : "")
-            .setLastDigits(suffix != null ? suffix : "")
+            .setDisplayName(holderName!!)
+            .setLastDigits(suffix!!)
             .setUserAddress(userAddress)
             .build()
 
