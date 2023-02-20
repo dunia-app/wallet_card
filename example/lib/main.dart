@@ -58,14 +58,7 @@ class _MyAppState extends State<MyApp> {
               _onPress(context, holderName, suffix);
             },
             loadCard: (certificates, nonce, nonceSignature) {
-              return {
-                "encryptedPassData":
-                    "vKK3QZcNbTrOUqrwIjU/2GbpXjFIqLiN+sohNtfReDHXiFRHwOji131CmkwCQBKMHv+758F9IFPyRnWBLQf0aMrlmUxJv0IGLTKp3TJu0MiTQJA98KH89D55oZ8+WNQT+adfTtMA9JxgMpjQdnyQVatGQy/wyIyiAF70a25obzj1/Ucz0g24OrJw9GS3b3v7NdoBYfVmxDMbvAp2lg5ca+hhGblpvExO/DZP5K0WdpMIuVyGqDxTusau/OS4PJ0FRHe+x6p9Etu9BFT5H7aBFozmhfIr8prkXopJFnM6KWhORlnCSKtjFq5FgkyU1l8WZoZYkw9pFXjWqNc3v8QIOHWnBcmwAPVAHS6+paAgGUC0A0OiilXPAnoseJDhSf2NhY3M8C0H/nXjNfSz",
-                "activationData":
-                    '{"version":"2","expirationDateIncluded":"true","tokenUniqueReferenceIncluded":"false","signatureAlgorithm":"RSA-SHA256","signature":"wL+ljmNPvCXlMpR9mcvK428u5UGAzr8gYoMPoZ10Bmf5dAOD5hSiVhLsAstWI50cHKr/lwgbm3iGSXjvFyo8rYem15sh0uFqoW8fIgXsdDQqayIjkBFabveyyH8KwLxyxn/Nui38wdTTxZRxL7AbLrgu0Zxee4WB71oOJsFib3T56Ck7fmghha0uKcdBTwrli+b0eMQ9HNk7FkMe/2FmMTiGiURCE9sQLm+OrTmMD4VSbFURZpXbPD1jLAvhx9flpMFk/7uIMAmzrlkpVNW65JuKQ3PXT4emN4HTaUY9TnMGF6cIbIRWs2QQJOh8FhjgGgPcMBboqAfKp1yXTt3Geg=="}',
-                "ephemeralPublicKey":
-                    "BJfe5WKlAKlJSlaR6+k7yl7L7WpCrSrzgnMY5x33schp1zDYMGgSkpzo9iee4SbY2CAKgUfJohfz7fLT/vtZBxQ=",
-              };
+              return "vKK3QZcNbTrOUqrwIjU/2GbpXjFIqLiN+sohNtfReDHXiFRHwOji131CmkwCQBKMHv+758F9IFPyRnWBLQf0aMrlmUxJv0IGLTKp3TJu0MiTQJA98KH89D55oZ8+WNQT+adfTtMA9JxgMpjQdnyQVatGQy/wyIyiAF70a25obzj1/Ucz0g24OrJw9GS3b3v7NdoBYfVmxDMbvAp2lg5ca+hhGblpvExO/DZP5K0WdpMIuVyGqDxTusau/OS4PJ0FRHe+x6p9Etu9BFT5H7aBFozmhfIr8prkXopJFnM6KWhORlnCSKtjFq5FgkyU1l8WZoZYkw9pFXjWqNc3v8QIOHWnBcmwAPVAHS6+paAgGUC0A0OiilXPAnoseJDhSf2NhY3M8C0H/nXjNfSz";
             },
           ),
         ),

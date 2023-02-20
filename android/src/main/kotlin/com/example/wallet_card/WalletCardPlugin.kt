@@ -69,12 +69,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     currentOperation = walletCardPluginResponseWrapper
 
-    Log.d("TAG", "methodCall")
-    Log.d("TAG", call.method)
-    Log.d("TAG", call.arguments.toString())
     val suffix = call.argument("suffix") as String?
-    Log.d("TAG", suffix!!)
-
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
       else -> result.notImplemented()
@@ -88,21 +83,21 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         try {
           val opcBytes: kotlin.ByteArray = pass!!.toByteArray()
           var userAddress: UserAddress = UserAddress.newBuilder()
-            .setName("getString(R.string.user_address_dummy_name)")
-            .setAddress1("getString(R.string.user_address_dummy_address1)")
-            .setLocality("getString(R.string.user_address_dummy_locality)")
-            .setAdministrativeArea("getString(R.string.user_address_dummy_administrative_area)")
-            .setCountryCode("getString(R.string.user_address_dummy_country_code)")
+            .setName("")
+            .setAddress1("")
+            .setLocality("")
+            .setAdministrativeArea("")
+            .setCountryCode("")
             .setPostalCode("")
-            .setPhoneNumber("getString(R.string.user_address_dummy_phone_number)")
+            .setPhoneNumber("")
             .build()
 
           var pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
             .setOpaquePaymentCard(opcBytes)
             .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
             .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
-            .setDisplayName("getString(R.string.push_tokenize_request_dummy_display_name)")
-            .setLastDigits("getString(R.string.push_tokenize_request_dummy_last_digits)")
+            .setDisplayName(holderName)
+            .setLastDigits(suffix)
             .setUserAddress(userAddress)
             .build()
 
