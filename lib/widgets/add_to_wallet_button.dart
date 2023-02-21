@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wallet_card/wallet_card.dart';
 
@@ -95,9 +96,13 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
           creationParamsCodec: const StandardMessageCodec(),
         );
       case TargetPlatform.android:
-        return RawMaterialButton(
-          child: Text('test'),
-          onPressed: widget.onPressed,
+        return InkWell(
+          onTap: widget.onPressed,
+          child: SvgPicture.asset(
+            'packages/wallett_card/assets/add_wallet.svg',
+            width: widget.width,
+            height: widget.height,
+          ),
         );
       default:
         if (widget.unsupportedPlatformChild == null) {
