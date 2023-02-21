@@ -99,7 +99,7 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
         return InkWell(
           onTap: widget.onPressed,
           child: SvgPicture.asset(
-            'packages/wallett_card/assets/add_wallet.svg',
+            'packages/wallet_card/assets/add_wallet.svg',
             width: widget.width,
             height: widget.height,
           ),
