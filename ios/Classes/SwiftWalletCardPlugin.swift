@@ -141,6 +141,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         error: Error?) {
         print(error)
         print(pass)
+        controller.dismiss(animated: true)
     }
 }
 
