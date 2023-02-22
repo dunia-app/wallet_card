@@ -85,12 +85,10 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         let passButton = PKAddPassButton(addPassButtonStyle: .blackOutline)
         passButton.addTarget(self, action: #selector(passButtonAction), for: .touchUpInside)
         view().addSubview(passButton)
-        /*
         passButton.translatesAutoresizingMaskIntoConstraints = false
-        passButton.topAnchor.constraint(equalTo: view().safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
+        //passButton.topAnchor.constraint(equalTo: view().safeAreaLayoutGuide.topAnchor, constant: 32).isActive = true
         passButton.leadingAnchor.constraint(equalTo: view().leadingAnchor, constant: 32).isActive = true
         passButton.trailingAnchor.constraint(equalTo: view().trailingAnchor, constant: -32).isActive = true
-        */
     }
 
     @objc func passButtonAction() {
