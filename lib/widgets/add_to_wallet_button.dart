@@ -14,6 +14,7 @@ class AddToWalletButton extends StatefulWidget {
   final double height;
   final String? cardHolderName;
   final String? cardSuffix;
+  final String? accountIdentifier;
   final Widget? unsupportedPlatformChild;
   final void Function()? onPressed;
   final FutureOr<String?> Function(
@@ -29,6 +30,7 @@ class AddToWalletButton extends StatefulWidget {
     required this.height,
     required this.cardHolderName,
     required this.cardSuffix,
+    required this.accountIdentifier,
     this.onPressed,
     this.loadCard,
     this.unsupportedPlatformChild,
