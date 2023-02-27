@@ -57,6 +57,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
     private var _key: String
     private var _cardHolderName: String
     private var _cardSuffix: String
+    private var _accountIdentifier: String
     private var _channel: FlutterMethodChannel
 
     init(
@@ -72,6 +73,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _key = args["key"] as! String
         _cardHolderName = args["cardHolderName"] as! String
         _cardSuffix = args["cardSuffix"] as! String
+        _accountIdentifier = args["accountIdentifier"] as! String
         _channel = channel
         super.init()
         createAddPassButton()
@@ -91,12 +93,14 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
     }
 
     @objc func passButtonAction() {
+        PKAddPaymentPassViewController.canAddPaymentPass()
         guard let configuration = PKAddPaymentPassRequestConfiguration(encryptionScheme: .ECC_V2) else {
           return
         }
 
         configuration.cardholderName = _cardHolderName
         configuration.primaryAccountSuffix = _cardSuffix
+        configuration.primaryAccountIdentifier = _accountIdentifier
         configuration.paymentNetwork = PKPaymentNetwork.masterCard
 
         guard let addPassViewController = PKAddPaymentPassViewController(requestConfiguration: configuration, delegate: self),
