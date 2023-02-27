@@ -54,6 +54,7 @@ class _MyAppState extends State<MyApp> {
             height: 30,
             cardHolderName: holderName,
             cardSuffix: suffix,
+            accountIdentifier: "",
             onPressed: () {
               _onPress(context, holderName, suffix);
             },

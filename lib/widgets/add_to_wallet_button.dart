@@ -47,6 +47,7 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
         'key': widget._id,
         'cardHolderName': widget.cardHolderName ?? '',
         'cardSuffix': widget.cardSuffix ?? '',
+        'accountIdentifier': widget.accountIdentifier ?? '',
       };
 
   @override
