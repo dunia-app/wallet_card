@@ -239,3 +239,25 @@ extension DigitizationData: Codable {
         fatalError("encode(to:) has not been implemented")
         }
 }
+
+class SumupPluginResponse {
+    var methodName: String
+    var status: Bool
+    var message: [String: Any]
+    
+    init(methodName: String, status: Bool) {
+        self.methodName = methodName
+        self.status = status
+        message = [:]
+    }
+    
+    init(methodName: String, status: Bool, message: [String: Any]) {
+        self.methodName = methodName
+        self.status = status
+        self.message = message
+    }
+    
+    func toDictionary() -> [String: Any] {
+        return ["methodName": methodName, "status": status, "message": message]
+    }
+}
