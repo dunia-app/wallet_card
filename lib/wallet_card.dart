@@ -41,9 +41,7 @@ class WalletCard {
   }
 
   Future<bool> canAddPass(String accountIdentifier) async {
-    final method = await _channel.invokeMethod('canAddPass', <String, String>{
-      'accountIdentifier': accountIdentifier,
-    });
+    final method = await _channel.invokeMethod('canAddPass', accountIdentifier);
     final response = WalletCardPluginResponse.fromMap(method);
     return response.status;
   }

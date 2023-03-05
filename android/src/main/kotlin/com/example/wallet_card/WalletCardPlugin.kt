@@ -69,7 +69,6 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     currentOperation = walletCardPluginResponseWrapper
 
-    val suffix = call.argument("suffix") as String?
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
       "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?).flutterResult()
@@ -80,22 +79,6 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private fun canAddPass(accountIdentifier: String?): WalletCardPluginResponseWrapper {
     val currentOp = operations["savePass"]!!
     currentOp.response.message = mutableMapOf("initialized" to true)
-
-    tapAndPayClient.
-    walletClient
-      .getPayApiAvailabilityStatus(PayClient.RequestType.SAVE_PASSES)
-      .addOnSuccessListener { status ->
-        _canSavePasses.value = status == PayApiAvailabilityStatus.AVAILABLE
-        // } else {
-        // We recommend to either:
-        // 1) Hide the save button
-        // 2) Fall back to a different Save Passes integration (e.g. JWT link)
-        // Note that a user might become eligible in the future.
-      }
-      .addOnFailureListener {
-        // Google Play Services is too old. API availability can't be verified.
-        _canUseGooglePay.value = false
-      }
 
     currentOp.response.status = true
     return currentOp
