@@ -85,7 +85,16 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
     return SizedBox(
       width: widget.width,
       height: widget.height,
-      child: platformWidget(context),
+      child: FutureBuilder(
+        future: WalletCard().canAddPass(widget.accountIdentifier ?? ""),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            return platformWidget(context);
+          }
+
+          return Container();
+        },
+      ),
     );
   }
 

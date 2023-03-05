@@ -72,8 +72,33 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     val suffix = call.argument("suffix") as String?
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
+      "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?).flutterResult()
       else -> result.notImplemented()
     }
+  }
+
+  private fun canAddPass(accountIdentifier: String?): WalletCardPluginResponseWrapper {
+    val currentOp = operations["savePass"]!!
+    currentOp.response.message = mutableMapOf("initialized" to true)
+
+    tapAndPayClient.
+    walletClient
+      .getPayApiAvailabilityStatus(PayClient.RequestType.SAVE_PASSES)
+      .addOnSuccessListener { status ->
+        _canSavePasses.value = status == PayApiAvailabilityStatus.AVAILABLE
+        // } else {
+        // We recommend to either:
+        // 1) Hide the save button
+        // 2) Fall back to a different Save Passes integration (e.g. JWT link)
+        // Note that a user might become eligible in the future.
+      }
+      .addOnFailureListener {
+        // Google Play Services is too old. API availability can't be verified.
+        _canUseGooglePay.value = false
+      }
+
+    currentOp.response.status = true
+    return currentOp
   }
 
   private fun savePass(holderName: String?, suffix: String?, pass: String?): WalletCardPluginResponseWrapper {
@@ -113,28 +138,6 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       })
 
-      /*
-      val pushTokenizeRequest: PushTokenizeRequest = PushTokenizeRequest.Builder()
-        .setOpaquePaymentCard(opcBytes)
-        .setNetwork(TapAndPay.CARD_NETWORK_MASTERCARD)
-        .setTokenServiceProvider(TapAndPay.TOKEN_PROVIDER_MASTERCARD)
-        .setDisplayName(holderName!!)
-        .setLastDigits(suffix!!)
-        .build()
-
-      Log.d("TAG", "savePass tap")
-      Log.d("TAG", activity.toString())
-
-      tapAndPayClient.pushTokenize(
-        activity,  // here i'm passing my current activity.
-        pushTokenizeRequest,
-        0
-      )
-       */
-      /*
-      val walletClient: PayClient = Pay.getClient(activity.application)
-      walletClient.savePasses(pass, activity, 0)
-       */
       currentOp.response.message = mutableMapOf("initialized" to true)
       currentOp.response.status = true
     } catch (e: Exception) {

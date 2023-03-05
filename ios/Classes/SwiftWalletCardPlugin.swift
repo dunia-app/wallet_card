@@ -17,9 +17,26 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    print("Not implemented")
-    return result(FlutterMethodNotImplemented)
-  }
+      let pluginResponse = SumupPluginResponse(methodName: call.method, status: true)
+        
+      switch call.method {
+        case "canAddPass":
+            let canAddPassResult = canAddPass(accountIdentifier: call.arguments as! String)
+            pluginResponse.message = ["result": canAddPassResult]
+            result(pluginResponse.toDictionary())
+            
+        default:
+            pluginResponse.status = false
+            pluginResponse.message = ["result": "Method not implemented"]
+            result(pluginResponse.toDictionary())
+        }
+    }
+
+    private func canAddPass(accountIdentifier: String) -> Bool {
+        let canAddPass = PKAddPaymentPassViewController.canAddPaymentPass()
+        let notAlreadyAdded = PKPassLibrary().canAddPaymentPass(withPrimaryAccountIdentifier: accountIdentifier)
+        return canAddPass && notAlreadyAdded
+    }
 }
 
 
