@@ -87,8 +87,8 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     tapAndPayClient
       .listTokens()
       .addOnCompleteListener(
-        object : OnCompleteListener<List<TokenInfo?>?>() {
-          fun onComplete(@NonNull task: Task<List<TokenInfo?>?>) {
+        object : OnCompleteListener<List<TokenInfo?>?> {
+          override fun onComplete(@NonNull task: Task<List<TokenInfo?>?>) {
             if (task.isSuccessful()) {
               for (token in task.getResult()) {
                 val operation = operations["savePass"]!!
