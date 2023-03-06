@@ -23,6 +23,7 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         case "canAddPass":
             let canAddPassResult = canAddPass(accountIdentifier: call.arguments as! String)
             pluginResponse.message = ["result": canAddPassResult]
+            pluginResponse.status = canAddPassResult
             result(pluginResponse.toDictionary())
             
         default:
