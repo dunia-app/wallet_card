@@ -1,8 +1,9 @@
 package com.example.wallet_card
 
 import android.app.Activity
-import android.content.ContentValues.TAG
 import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.annotation.NonNull
 import com.google.android.gms.tapandpay.TapAndPay
 import com.google.android.gms.tapandpay.TapAndPayClient
@@ -71,7 +72,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
-      "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?).flutterResult()
+      "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?)
       else -> result.notImplemented()
     }
   }
@@ -80,7 +81,26 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     val currentOp = operations["savePass"]!!
     currentOp.response.message = mutableMapOf("initialized" to true)
 
-    currentOp.response.status = true
+    tapAndPayClient
+      .listTokens()
+      .addOnCompleteListener(
+        object : OnCompleteListener<List<TokenInfo?>?>() {
+          fun onComplete(@NonNull task: Task<List<TokenInfo?>?>) {
+            val listTokensError: TextView = getView().findViewById(R.id.list_tokens_error)
+            if (task.isSuccessful()) {
+              for (token in task.getResult()) {
+                val operation = operations["savePass"]!!
+                operation.response.status = false
+                operation.flutterResult()
+              }
+            } else {
+              val operation = operations["savePass"]!!
+              operation.response.status = true
+              operation.flutterResult()
+            }
+          }
+        })
+
     return currentOp
   }
 
