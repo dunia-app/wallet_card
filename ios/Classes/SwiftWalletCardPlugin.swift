@@ -17,7 +17,7 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-      let pluginResponse = SumupPluginResponse(methodName: call.method, status: true)
+      let pluginResponse = WalletPluginResponse(methodName: call.method, status: false)
         
       switch call.method {
         case "canAddPass":
@@ -241,7 +241,7 @@ extension DigitizationData: Codable {
         }
 }
 
-class SumupPluginResponse {
+class WalletPluginResponse {
     var methodName: String
     var status: Bool
     var message: [String: Any]
