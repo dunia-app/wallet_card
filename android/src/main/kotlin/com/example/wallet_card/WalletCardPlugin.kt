@@ -9,7 +9,10 @@ import com.google.android.gms.tapandpay.TapAndPay
 import com.google.android.gms.tapandpay.TapAndPayClient
 import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest
 import com.google.android.gms.tapandpay.issuer.UserAddress
+import com.google.android.gms.tapandpay.issuer.TokenInfo
 import com.google.android.gms.wallet.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -86,7 +89,6 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       .addOnCompleteListener(
         object : OnCompleteListener<List<TokenInfo?>?>() {
           fun onComplete(@NonNull task: Task<List<TokenInfo?>?>) {
-            val listTokensError: TextView = getView().findViewById(R.id.list_tokens_error)
             if (task.isSuccessful()) {
               for (token in task.getResult()) {
                 val operation = operations["savePass"]!!
