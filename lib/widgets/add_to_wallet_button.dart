@@ -86,7 +86,10 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
       width: widget.width,
       height: widget.height,
       child: FutureBuilder(
-        future: WalletCard().canAddPass(widget.accountIdentifier ?? ""),
+        future: WalletCard().canAddPass({
+          "accountIdentifier": widget.accountIdentifier ?? "",
+          "cardSuffix": widget.cardSuffix ?? "",
+        }),
         builder: (context, snapshot) {
           if (snapshot.data == true) {
             return platformWidget(context);

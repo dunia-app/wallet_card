@@ -40,8 +40,8 @@ class WalletCard {
     _handlers.remove(key);
   }
 
-  Future<bool> canAddPass(String accountIdentifier) async {
-    final method = await _channel.invokeMethod('canAddPass', accountIdentifier);
+  Future<bool> canAddPass(Map<String, String> params) async {
+    final method = await _channel.invokeMethod('canAddPass', params);
     final response = WalletCardPluginResponse.fromMap(method);
     return response.status;
   }
