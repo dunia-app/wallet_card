@@ -130,6 +130,9 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
           return
         }
 
+        print("accountIdentifier")
+        print(_accountIdentifier)
+
         configuration.cardholderName = _cardHolderName
         configuration.primaryAccountSuffix = _cardSuffix
         configuration.primaryAccountIdentifier = _accountIdentifier
