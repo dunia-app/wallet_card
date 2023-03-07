@@ -22,6 +22,7 @@ class AddToWalletButton extends StatefulWidget {
     String,
     String,
   )? loadCard;
+  final void Function(String)? addedCard;
   final String _id = const Uuid().v4();
 
   AddToWalletButton({
@@ -33,6 +34,7 @@ class AddToWalletButton extends StatefulWidget {
     required this.accountIdentifier,
     this.onPressed,
     this.loadCard,
+    this.addedCard,
     this.unsupportedPlatformChild,
   }) : super(key: key);
 
@@ -57,7 +59,8 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
       switch (call.method) {
         case "add_payment_pass":
           return getPass(call);
-
+        case "add_payment_pass_success":
+          return passSuccess(call);
         default:
           return null;
       }
@@ -72,6 +75,12 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
     );
 
     return result;
+  }
+
+  Future<void> passSuccess(MethodCall call) async {
+    widget.addedCard?.call(
+      call.arguments["primaryAccountIdentifier"] as String,
+    );
   }
 
   @override

@@ -153,7 +153,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         completionHandler handler: @escaping (PKAddPaymentPassRequest) -> Void) {
 
         var certifs: [String] = []
-        for certificate in certificates {
+        for certificate in certificates { 
             certifs.append(certificate.base64EncodedString())
         }
       
@@ -180,6 +180,8 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         error: Error?) {
         print(error)
         print(pass)
+
+        _channel.invokeMethod("add_payment_pass_success", arguments: ["primaryAccountIdentifier": pass.primaryAccountIdentifier])
         controller.dismiss(animated: true)
     }
 }
