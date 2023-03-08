@@ -78,6 +78,14 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
   }
 
   Future<void> passSuccess(MethodCall call) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          call.arguments["primaryAccountIdentifier"],
+        ),
+        backgroundColor: Colors.red,
+      ),
+    );
     widget.addedCard?.call(
       call.arguments["primaryAccountIdentifier"] as String,
     );
