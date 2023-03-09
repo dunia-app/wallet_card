@@ -181,7 +181,7 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         print(error)
         print(pass)
 
-        _channel.invokeMethod("add_payment_pass_success", arguments: ["primaryAccountIdentifier": pass?.primaryAccountIdentifier], result: { r in
+        _channel.invokeMethod("add_payment_pass_success", arguments: ["key": _key, "primaryAccountIdentifier": pass?.primaryAccountIdentifier], result: { r in
           controller.dismiss(animated: true)
         })
     }
