@@ -60,6 +60,7 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
         case "add_payment_pass":
           return getPass(call);
         case "add_payment_pass_success":
+          print("add_payment_pass_success");
           return passSuccess(call);
         default:
           return null;
