@@ -58,6 +58,9 @@ class _MyAppState extends State<MyApp> {
             onPressed: () {
               _onPress(context, holderName, suffix);
             },
+            addedCard: (value) {
+              debugPrint(value);
+            },
             loadCard: (certificates, nonce, nonceSignature) {
               return "vKK3QZcNbTrOUqrwIjU/2GbpXjFIqLiN+sohNtfReDHXiFRHwOji131CmkwCQBKMHv+758F9IFPyRnWBLQf0aMrlmUxJv0IGLTKp3TJu0MiTQJA98KH89D55oZ8+WNQT+adfTtMA9JxgMpjQdnyQVatGQy/wyIyiAF70a25obzj1/Ucz0g24OrJw9GS3b3v7NdoBYfVmxDMbvAp2lg5ca+hhGblpvExO/DZP5K0WdpMIuVyGqDxTusau/OS4PJ0FRHe+x6p9Etu9BFT5H7aBFozmhfIr8prkXopJFnM6KWhORlnCSKtjFq5FgkyU1l8WZoZYkw9pFXjWqNc3v8QIOHWnBcmwAPVAHS6+paAgGUC0A0OiilXPAnoseJDhSf2NhY3M8C0H/nXjNfSz";
             },

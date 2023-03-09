@@ -56,6 +56,8 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
   void initState() {
     super.initState();
     WalletCard().addHandler(widget._id, (call) {
+      print("addHandler");
+      print(call.method);
       switch (call.method) {
         case "add_payment_pass":
           return getPass(call);
@@ -79,17 +81,9 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
   }
 
   Future<void> passSuccess(MethodCall call) async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          call.arguments["primaryAccountIdentifier"],
-        ),
-        backgroundColor: Colors.red,
-      ),
-    );
-    widget.addedCard?.call(
-      call.arguments["primaryAccountIdentifier"] as String,
-    );
+    String? primaryAccountIdentifier =
+        call.arguments["primaryAccountIdentifier"];
+    widget.addedCard?.call(primaryAccountIdentifier ?? '');
   }
 
   @override
