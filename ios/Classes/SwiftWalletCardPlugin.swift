@@ -42,7 +42,7 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
     private func canAddPass(accountIdentifier: String) -> Bool {
         print("start canAddPass")
         let canAddPass = PKAddPaymentPassViewController.canAddPaymentPass()
-        let canAddPaymentPass = PKPassLibrary().canAddSecureElementPass(withPrimaryAccountIdentifier: accountIdentifier)
+        let canAddPaymentPass = PKPassLibrary().canAddSecureElementPass(primaryAccountIdentifier: accountIdentifier)
 
         print("accountIdentifier")
         print(accountIdentifier)
