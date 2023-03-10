@@ -2,6 +2,7 @@ import Flutter
 import Foundation
 import PassKit
 import UIKit
+import WatchConnectivity
 
 import Flutter
 import UIKit
@@ -23,10 +24,7 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         case "canAddPass":
             let args = call.arguments as! [String: Any]
             let accountIdentifier = args["accountIdentifier"] as! String
-
-            print("args")
-            print(args)
-
+          
             let canAddPassResult = canAddPass(accountIdentifier: accountIdentifier)
             pluginResponse.message = ["result": canAddPassResult]
             pluginResponse.status = canAddPassResult
@@ -39,11 +37,30 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    private func canAddPass(accountIdentifier: String) -> Bool {
+    private func canAddPass(accountIdentifier: String, suffix: String) -> Bool {
         let canAddPass = PKAddPaymentPassViewController.canAddPaymentPass()
-        let canAddPaymentPass = PKPassLibrary().canAddSecureElementPass(primaryAccountIdentifier: accountIdentifier)
-
-        return canAddPass && canAddPaymentPass
+        let passes = PKPassLibrary().passes()
+        
+        var canAddPassPhone = true
+        var canAddPassWatch = false
+        for pass in passes {
+            if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
+                canAddPassPhone = false
+            }
+        }
+        
+        if (WCSession.isSupported()) {
+            let session = WCSession.default
+            canAddPassWatch = session.isPaired
+            let remotePasses = PKPassLibrary().remoteSecureElementPasses
+            for pass in remotePasses {
+                if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
+                    canAddPassWatch = false
+                }
+            }
+        }
+        
+        return canAddPass && canAddPassPhone && canAddPassWatch
     }
 }
 
@@ -171,9 +188,6 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _ controller: PKAddPaymentPassViewController,
         didFinishAdding pass: PKPaymentPass?,
         error: Error?) {
-        print(error)
-        print(pass)
-
         _channel.invokeMethod("add_payment_pass_success", arguments: ["key": _key, "primaryAccountIdentifier": pass?.primaryAccountIdentifier], result: { r in
           controller.dismiss(animated: true)
         })
