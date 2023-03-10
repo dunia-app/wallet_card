@@ -43,7 +43,6 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         let passes = PKPassLibrary().passes()
         
         var canAddPassPhone = true
-        var canAddPassWatch = false
         for pass in passes {
             if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
                 canAddPassPhone = false
@@ -51,17 +50,20 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         }
         
         if (WCSession.isSupported()) {
+            var canAddPassWatch = true
             let session = WCSession.default
             canAddPassWatch = session.isPaired
             let remotePasses = PKPassLibrary().remoteSecureElementPasses
             for pass in remotePasses {
-                if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
-                    canAddPassWatch = false
-                }
+              if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
+                canAddPassWatch = false
+              }
             }
+
+            return canAddPass && canAddPassPhone && canAddPassWatch
+        } else {
+            return canAddPass && canAddPassPhone
         }
-        
-        return canAddPass && canAddPassPhone && canAddPassWatch
     }
 }
 
