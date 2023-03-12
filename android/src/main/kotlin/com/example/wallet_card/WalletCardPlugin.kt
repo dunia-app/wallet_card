@@ -75,12 +75,12 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     when (call.method) {
       "savePass" -> savePass(call.argument("holderName") as String?, call.argument("suffix") as String?, call.argument("pass") as String?).flutterResult()
-      "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?)
+      "canAddPass" -> canAddPass(call.argument("accountIdentifier") as String?, call.argument("cardSuffix") as String?) 
       else -> result.notImplemented()
     }
   }
 
-  private fun canAddPass(accountIdentifier: String?): WalletCardPluginResponseWrapper {
+  private fun canAddPass(accountIdentifier: String?, cardSuffix: String?): WalletCardPluginResponseWrapper {
     val currentOp = operations["savePass"]!!
     currentOp.response.message = mutableMapOf("initialized" to true)
 
@@ -90,14 +90,15 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         object : OnCompleteListener<List<TokenInfo>> {
           override fun onComplete(@NonNull task: Task<List<TokenInfo>>) {
             if (task.isSuccessful()) {
-              for (token in task.getResult()) {
-                val operation = operations["savePass"]!!
-                operation.response.status = false
-                operation.flutterResult()
-              }
-            } else {
               val operation = operations["savePass"]!!
               operation.response.status = true
+
+              for (token in task.getResult()) {
+                if(token.getDpanLastFour() == cardSuffix) {
+                  operation.response.status = false
+                }
+              }
+
               operation.flutterResult()
             }
           }
