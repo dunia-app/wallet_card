@@ -81,7 +81,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   private fun canAddPass(accountIdentifier: String?, cardSuffix: String?): WalletCardPluginResponseWrapper {
-    val currentOp = operations["savePass"]!!
+    val currentOp = operations["canAddPass"]!!
     currentOp.response.message = mutableMapOf("initialized" to true)
 
     tapAndPayClient
@@ -90,7 +90,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         object : OnCompleteListener<List<TokenInfo>> {
           override fun onComplete(@NonNull task: Task<List<TokenInfo>>) {
             if (task.isSuccessful()) {
-              val operation = operations["savePass"]!!
+              val operation = operations["canAddPass"]!!
               operation.response.status = true
 
               for (token in task.getResult()) {
