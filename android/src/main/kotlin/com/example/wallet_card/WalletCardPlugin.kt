@@ -100,10 +100,11 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               for (token in task.getResult()) {
                 Log.i("TAG", "token");
                 Log.i("TAG", token.getDpanLastFour());
+                Log.i("TAG", token.getFpanLastFour());
                 Log.i("TAG", "suffix");
                 Log.i("TAG", cardSuffix!!);
                 
-                if(token.getDpanLastFour() == cardSuffix) {
+                if(token.getFpanLastFour() == cardSuffix) {
                   operation.response.status = false
                 }
               }
