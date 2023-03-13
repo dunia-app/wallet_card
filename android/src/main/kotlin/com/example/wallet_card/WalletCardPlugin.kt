@@ -93,7 +93,12 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               val operation = operations["canAddPass"]!!
               operation.response.status = true
 
+              print("canAddPass")
               for (token in task.getResult()) {
+                print("token")
+                print(token.getDpanLastFour())
+                print("suffix")
+                print(cardSuffix)
                 if(token.getDpanLastFour() == cardSuffix) {
                   operation.response.status = false
                 }
