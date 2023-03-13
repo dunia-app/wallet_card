@@ -95,6 +95,8 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
               print("canAddPass")
               for (token in task.getResult()) {
+                operation.response.status = false
+                
                 print("token")
                 print(token.getDpanLastFour())
                 print("suffix")
