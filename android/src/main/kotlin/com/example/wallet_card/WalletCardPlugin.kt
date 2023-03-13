@@ -85,6 +85,8 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     val currentOp = operations["canAddPass"]!!
     currentOp.response.message = mutableMapOf("initialized" to true)
 
+    Log.i("TAG", "canAddPass");
+
     tapAndPayClient
       .listTokens()
       .addOnCompleteListener(
@@ -94,13 +96,13 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               val operation = operations["canAddPass"]!!
               operation.response.status = true
 
-              android.widget.Toast.makeText(activity, "canAddPass", android.widget.Toast.LENGTH_LONG)
+              Log.i("TAG", "canAddPass 2");
               for (token in task.getResult()) {
-                android.widget.Toast.makeText(activity, "token", android.widget.Toast.LENGTH_LONG)
-                print("token")
-                print(token.getDpanLastFour())
-                print("suffix")
-                print(cardSuffix)
+                Log.i("TAG", "token");
+                Log.i("TAG", token.getDpanLastFour());
+                Log.i("TAG", "suffix");
+                Log.i("TAG", cardSuffix);
+                
                 if(token.getDpanLastFour() == cardSuffix) {
                   operation.response.status = false
                 }
