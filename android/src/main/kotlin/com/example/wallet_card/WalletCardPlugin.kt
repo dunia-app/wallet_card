@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.NonNull
 import com.google.android.gms.tapandpay.TapAndPay
 import com.google.android.gms.tapandpay.TapAndPayClient
@@ -92,11 +93,10 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             if (task.isSuccessful()) {
               val operation = operations["canAddPass"]!!
               operation.response.status = true
-
-              print("canAddPass")
+)
+              android.widget.Toast.makeText(activity, "canAddPass", android.widget.Toast.LENGTH_LONG)
               for (token in task.getResult()) {
-                operation.response.status = false
-                
+                android.widget.Toast.makeText(activity, "token", android.widget.Toast.LENGTH_LONG)
                 print("token")
                 print(token.getDpanLastFour())
                 print("suffix")
