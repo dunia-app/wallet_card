@@ -93,7 +93,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             if (task.isSuccessful()) {
               val operation = operations["canAddPass"]!!
               operation.response.status = true
-)
+
               android.widget.Toast.makeText(activity, "canAddPass", android.widget.Toast.LENGTH_LONG)
               for (token in task.getResult()) {
                 android.widget.Toast.makeText(activity, "token", android.widget.Toast.LENGTH_LONG)
