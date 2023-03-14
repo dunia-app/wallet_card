@@ -51,8 +51,9 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
             print(pass)
             print(pass.secureElementPass)
             print(pass.secureElementPass?.deviceAccountNumberSuffix)
+            print(pass.secureElementPass?.primaryAccountNumberSuffix)
             print(suffix)
-            if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
+            if (pass.secureElementPass?.primaryAccountNumberSuffix == suffix) {
                 canAddPassPhone = false
             }
         }
