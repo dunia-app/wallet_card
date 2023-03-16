@@ -94,22 +94,22 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: FutureBuilder(
-        future: WalletCard().canAddPass({
-          "accountIdentifier": widget.accountIdentifier ?? "",
-          "cardSuffix": widget.cardSuffix ?? "",
-        }),
-        builder: (context, snapshot) {
-          if (snapshot.data == true) {
-            return platformWidget(context);
-          }
+    return FutureBuilder(
+      future: WalletCard().canAddPass({
+        "accountIdentifier": widget.accountIdentifier ?? "",
+        "cardSuffix": widget.cardSuffix ?? "",
+      }),
+      builder: (context, snapshot) {
+        if (snapshot.data == true) {
+          return SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: platformWidget(context),
+          );
+        }
 
-          return Container();
-        },
-      ),
+        return Container();
+      },
     );
   }
 
