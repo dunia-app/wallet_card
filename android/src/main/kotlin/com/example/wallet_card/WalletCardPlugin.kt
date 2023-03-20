@@ -95,7 +95,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               operation.response.status = true
 
               for (token in task.getResult()) {
-                if(token.getFpanLastFour() == cardSuffix) {
+                if(token.getFpanLastFour() == cardSuffix && token.getTokenState() != TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
                   operation.response.status = false
                 }
               }
