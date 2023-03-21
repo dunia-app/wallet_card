@@ -11,6 +11,7 @@ import com.google.android.gms.tapandpay.TapAndPayClient
 import com.google.android.gms.tapandpay.issuer.PushTokenizeRequest
 import com.google.android.gms.tapandpay.issuer.UserAddress
 import com.google.android.gms.tapandpay.issuer.TokenInfo
+import com.google.android.gms.tapandpay.issuer.TokenStatus;
 import com.google.android.gms.wallet.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -95,7 +96,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               operation.response.status = true
 
               for (token in task.getResult()) {
-                if(token.getFpanLastFour() == cardSuffix && token.getTokenState() != TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
+                if(token.getFpanLastFour() == cardSuffix && token.getTokenState() != TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
                   operation.response.status = false
                 }
               }
