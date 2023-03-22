@@ -135,12 +135,42 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             .build()
 
           Log.i("TAG", "before push");
-          tapAndPayClient.pushTokenize(
-            activity,
-            pushTokenizeRequest,
-            REQUEST_CODE_PUSH_TOKENIZE
-          )
-          Log.i("TAG", "after push");
+          tapAndPayClient
+          .listTokens()
+          .addOnCompleteListener(
+            object : OnCompleteListener<List<TokenInfo>> {
+              override fun onComplete(@NonNull task: Task<List<TokenInfo>>) {
+                if (task.isSuccessful()) {
+                  val found = false
+                  val tokenReferenceId = ""
+                  for (token in task.getResult()) {
+                    if(token.getFpanLastFour() == cardSuffix && token.getTokenState() != TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
+                      found = true
+                      tokenReferenceId = token.getIssuerTokenId()
+                    }
+                  }
+
+                  if (found) {
+                    tapAndPayClient.tokenize(
+                      activity,
+                      tokenReferenceId,
+                      TapAndPay.TOKEN_PROVIDER_MASTERCARD,
+                      holderName!!,
+                      TapAndPay.CARD_NETWORK_MASTERCARD,
+                      REQUEST_CODE_PUSH_TOKENIZE
+                    )
+                  } else {
+                    tapAndPayClient.pushTokenize(
+                      activity,
+                      pushTokenizeRequest,
+                      REQUEST_CODE_PUSH_TOKENIZE
+                    )
+                  }
+
+                  Log.i("TAG", "after push");
+                }
+              }
+            })
         } catch (e: Exception) {
           Log.i("TAG", e.message!!);
         }
