@@ -141,10 +141,10 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             object : OnCompleteListener<List<TokenInfo>> {
               override fun onComplete(@NonNull task: Task<List<TokenInfo>>) {
                 if (task.isSuccessful()) {
-                  val found = false
-                  val tokenReferenceId = ""
+                  var found = false
+                  var tokenReferenceId = ""
                   for (token in task.getResult()) {
-                    if(token.getFpanLastFour() == cardSuffix && token.getTokenState() != TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
+                    if(token.getFpanLastFour() == suffix && token.getTokenState() != TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
                       found = true
                       tokenReferenceId = token.getIssuerTokenId()
                     }
