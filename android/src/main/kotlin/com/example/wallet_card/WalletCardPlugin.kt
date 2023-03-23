@@ -144,7 +144,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                   var found = false
                   var tokenReferenceId = ""
                   for (token in task.getResult()) {
-                    if(token.getFpanLastFour() == suffix && token.getTokenState() != TapAndPay.TOKEN_STATE_NEEDS_IDENTITY_VERIFICATION) {
+                    if(token.getFpanLastFour() == suffix) {
                       found = true
                       tokenReferenceId = token.getIssuerTokenId()
                     }

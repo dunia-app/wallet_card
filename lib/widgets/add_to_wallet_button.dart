@@ -125,10 +125,9 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
       case TargetPlatform.android:
         return InkWell(
           onTap: widget.onPressed,
-          child: SvgPicture.asset(
-            'packages/wallet_card/assets/add_wallet.svg',
+          child: Image.asset(
+            'packages/wallet_card/assets/add_wallet.png',
             width: widget.width,
-            height: widget.height,
           ),
         );
       default:
