@@ -25,6 +25,7 @@ dev_dependencies:
 flutter:
   assets:
     - packages/wallet_card/assets/add_wallet.svg
+    - packages/wallet_card/assets/add_wallet.png
   plugin:
     platforms:
       android:
