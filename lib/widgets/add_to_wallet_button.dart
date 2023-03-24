@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wallet_card/wallet_card.dart';
 
@@ -56,13 +55,10 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
   void initState() {
     super.initState();
     WalletCard().addHandler(widget._id, (call) {
-      print("addHandler");
-      print(call.method);
       switch (call.method) {
         case "add_payment_pass":
           return getPass(call);
         case "add_payment_pass_success":
-          print("add_payment_pass_success");
           return passSuccess(call);
         default:
           return null;
@@ -92,13 +88,21 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
     super.dispose();
   }
 
+  Future<Object?>? canAddPass() async {
+    var result = await WalletCard().canAddPass({
+      "accountIdentifier": widget.accountIdentifier ?? "",
+      "cardSuffix": widget.cardSuffix ?? "",
+    });
+
+    widget.addedCard!('');
+
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: WalletCard().canAddPass({
-        "accountIdentifier": widget.accountIdentifier ?? "",
-        "cardSuffix": widget.cardSuffix ?? "",
-      }),
+      future: canAddPass(),
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return SizedBox(
