@@ -94,7 +94,9 @@ class _AddToWalletButtonState extends State<AddToWalletButton> {
       "cardSuffix": widget.cardSuffix ?? "",
     });
 
-    widget.addedCard!('');
+    if (result == true) {
+      widget.addedCard!('');
+    }
 
     return result;
   }
