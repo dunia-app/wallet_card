@@ -193,7 +193,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
              fn()
          } catch (e: IllegalStateException) {
              Log.d(
-                 TAG,
+                 "TAG",
                  "ignoring exception: $e. See https://github.com/flutter/flutter/issues/29092 for details."
              )
          }
