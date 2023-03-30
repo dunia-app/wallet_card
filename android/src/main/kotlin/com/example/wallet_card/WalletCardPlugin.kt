@@ -101,7 +101,10 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 }
               }
 
-              operation.flutterResult()
+              operation.response.message = mutableMapOf("initialized" to false)
+              ignoreIllegalState {
+                operation.flutterResult()
+              }
             }
           }
         })
@@ -176,7 +179,7 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       })
 
-      currentOp.response.message = mutableMapOf("initialized" to true)
+      currentOp.response.message = mutableMapOf("initialized" to false)
       currentOp.response.status = true
     } catch (e: Exception) {
       currentOp.response.message = mutableMapOf("initialized" to false, "errors" to e.message)
@@ -184,6 +187,17 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
     return currentOp
   }
+
+  fun ignoreIllegalState(fn: () -> Unit) {
+         try {
+             fn()
+         } catch (e: IllegalStateException) {
+             Log.d(
+                 TAG,
+                 "ignoring exception: $e. See https://github.com/flutter/flutter/issues/29092 for details."
+             )
+         }
+     }
 }
 
 class WalletCardPluginResponseWrapper(@NonNull var methodName: String, @NonNull var methodResult: MethodChannel.Result) {
