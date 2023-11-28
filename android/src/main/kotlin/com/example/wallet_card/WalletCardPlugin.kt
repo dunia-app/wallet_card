@@ -48,17 +48,11 @@ class WalletCardPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     tapAndPayClient = TapAndPay.getClient(activity)
   }
 
-  override fun onDetachedFromActivity() {
-    TODO("Not yet implemented")
-  }
+  override fun onDetachedFromActivity() { }
 
-  override fun onDetachedFromActivityForConfigChanges() {
-    TODO("Not yet implemented")
-  }
+  override fun onDetachedFromActivityForConfigChanges() { }
 
-  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    TODO("Not yet implemented")
-  }
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) { }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
