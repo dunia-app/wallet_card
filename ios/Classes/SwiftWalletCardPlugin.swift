@@ -204,6 +204,9 @@ class PKAddPassButtonNativeView: NSObject, FlutterPlatformView, PKAddPaymentPass
         _ controller: PKAddPaymentPassViewController,
         didFinishAdding pass: PKPaymentPass?,
         error: Error?) {
+
+        print("addPaymentPassViewController : ")
+        print(error)
         _channel.invokeMethod("add_payment_pass_success", arguments: ["key": _key, "primaryAccountIdentifier": pass?.primaryAccountIdentifier], result: { r in
           controller.dismiss(animated: true)
         })
@@ -302,6 +305,12 @@ class WalletPluginResponse {
     }
     
     func toDictionary() -> [String: Any] {
+        print("réponse")
+        print("méthode : ")
+        print(methodName)
+        print("message : ")
+        print(message)
+        
         return ["methodName": methodName, "status": status, "message": message]
     }
 }
