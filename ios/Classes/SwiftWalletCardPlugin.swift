@@ -2,10 +2,6 @@ import Flutter
 import Foundation
 import PassKit
 import UIKit
-import WatchConnectivity
-
-import Flutter
-import UIKit
 
 public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -22,11 +18,9 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
         
       switch call.method {
         case "canAddPass":
-            print("canAddPass")
             let args = call.arguments as! [String: Any]
             let accountIdentifier = args["accountIdentifier"] as! String
             let suffix = args["cardSuffix"] as! String
-            print(suffix)
           
             let canAddPassResult = canAddPass(accountIdentifier: accountIdentifier, suffix: suffix)
             pluginResponse.message = ["result": canAddPassResult]
@@ -41,42 +35,32 @@ public class SwiftWalletCardPlugin: NSObject, FlutterPlugin {
     }
 
     private func canAddPass(accountIdentifier: String, suffix: String) -> Bool {
-        let canAddPass = PKAddPaymentPassViewController.canAddPaymentPass()
-        let passes = PKPassLibrary().passes(of: .secureElement)
-        print(passes)
-        print(passes.count)
-        
-        var canAddPassPhone = true
-        for pass in passes {
-            print(pass)
-            print(pass.secureElementPass)
-            print(pass.secureElementPass?.deviceAccountNumberSuffix)
-            print(pass.secureElementPass?.primaryAccountNumberSuffix)
-            print(suffix)
-            if (pass.secureElementPass?.primaryAccountNumberSuffix == suffix) {
-                canAddPassPhone = false
-            }
-        }
-        
-        if (WCSession.isSupported() && WCSession.default.isPaired) {
-            var canAddPassWatch = true
-            let remotePasses = PKPassLibrary().remoteSecureElementPasses
-            for pass in remotePasses {
-              print(pass)
-              if (pass.secureElementPass?.deviceAccountNumberSuffix == suffix) {
-                canAddPassWatch = false
-              }
+        let passLibrary = PKPassLibrary()
+        let deviceAllowsAdding = PKAddPaymentPassViewController.canAddPaymentPass()
+
+        let matchesRequestedCard: (PKSecureElementPass?) -> Bool = { securePass in
+            guard let pass = securePass else { return false }
+
+            if !accountIdentifier.isEmpty && pass.primaryAccountIdentifier == accountIdentifier {
+                return true
             }
 
-            print(canAddPass)
-            print(canAddPassPhone)
-            print(canAddPassWatch)
-            return canAddPass && canAddPassPhone && canAddPassWatch
-        } else {
-            print(canAddPass)
-            print(canAddPassPhone)
-            return canAddPass && canAddPassPhone
+            guard !suffix.isEmpty else { return false }
+            return pass.primaryAccountNumberSuffix == suffix || pass.deviceAccountNumberSuffix == suffix
         }
+
+        let hasLocalPass = passLibrary
+            .passes(of: .secureElement)
+            .contains { matchesRequestedCard($0.secureElementPass) }
+
+        var canAddSecureElement = false
+        if #available(iOS 13.4, *) {
+            canAddSecureElement = passLibrary.canAddSecureElementPass(primaryAccountIdentifier: accountIdentifier)
+        }
+
+        let localEligibility = deviceAllowsAdding && !hasLocalPass
+
+        return localEligibility || canAddSecureElement
     }
 }
 
